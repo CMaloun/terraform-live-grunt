@@ -187,7 +187,7 @@ resource "azurerm_virtual_machine" "vm" {
 
     settings = <<SETTINGS
      {
-         "fileUris": ["https://raw.githubusercontent.com/CMaloun/terragrunt/master/extensions/azure/web/install_puppetagent_windows.ps1"],
+         "fileUris": ["https://bitbucket.org/talentsoft/infrastructure-code/raw/master/extensions/azure/web/install_puppetagent_windows.ps1"],
          "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File install_puppetagent_windows.ps1 -PuppetEnvironment ${var.puppet_environment} -PuppetAgentCertName ${element(azurerm_virtual_machine.vm.*.name, count.index)}.${var.domain_name} -PuppetMasterIpAddress ${var.puppetmaster_ip_address} -PuppetMasterHostName ${var.puppetmaster_hostname} -PuppetAgentRole ${var.server_role}"
      }
  SETTINGS
