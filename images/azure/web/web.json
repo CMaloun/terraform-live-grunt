@@ -1,0 +1,78 @@
+{
+  "variables" : {
+    "client_id": "f88662aa-95d2-4cb9-9138-98667150dbc0",
+    "client_secret": "P@ssw0rd!",
+    "tenant_id": "461a774b-c94c-4ea0-b027-311a135d9234",
+    "subscription_id": "c92d99d5-bf52-4de7-867f-a269bbc19b3d",
+    "object_id": "4a4a07e7-f28f-468d-bd31-01d71c04e277",
+    "resource_group": "image-rg",
+    "storage_account": "imagergdisks590"
+  },
+  "builders": [{
+    "type": "azure-arm",
+
+    "client_id": "{{user `client_id`}}",
+    "client_secret": "{{user `client_secret`}}",
+    "resource_group_name": "{{user `resource_group`}}",
+    "storage_account": "{{user `storage_account`}}",
+    "subscription_id": "{{user `subscription_id`}}",
+    "object_id": "{{user `object_id`}}",
+
+    "capture_container_name": "images",
+    "capture_name_prefix": "packer",
+
+    "os_type": "Windows",
+    "image_url": "https://imagergdisks590.blob.core.windows.net/vhds/MyBaseVM201220171019094424.vhd",
+
+    "communicator": "winrm",
+    "winrm_use_ssl": "true",
+    "winrm_insecure": "true",
+    "winrm_timeout": "3m",
+    "winrm_username": "packer",
+
+    "location": "West US",
+    "vm_size": "Standard_DS2_v2"
+  }],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "inline": [
+        "winrm quickconfig -q",
+        "winrm set winrm/config '@{MaxTimeoutms=\"7200000\"}'",
+        "winrm set winrm/config/winrs '@{MaxShellsPerUser=\"100\"}'",
+        "winrm set winrm/config/winrs '@{MaxConcurrentUsers=\"30\"}'",
+        "winrm set winrm/config/winrs '@{MaxProcessesPerShell=\"100\"}'",
+        "winrm set winrm/config/winrs '@{MaxMemoryPerShellMB=\"4096\"}'",
+        "winrm set winrm/config/service '@{AllowUnencrypted=\"true\"}'"
+      ]
+    },
+   {
+    "type": "powershell",
+    "script":"install_puppetagent_windows.ps1"
+  },
+  {
+      "type": "file",
+      "source": "C:/puppet/code/environments/development/hieradata/",
+      "destination": "C:/Windows/Temp/packer-puppet-masterless/hieradata"
+    },
+	{
+  	"type": "puppet-masterless",
+    "guest_os_type": "windows",
+  	"manifest_file": "C:\\puppet\\code\\environments\\development\\manifests\\site.pp",
+  	"hiera_config_path": "C:\\puppet\\code\\environments\\development\\hiera.yaml",
+  	"module_paths": ["C:\\puppet\\code\\environments\\development\\modules","C:\\puppet\\code\\environments\\development\\site"],
+    "facter" : { "role" : "windowswebserver" },
+    "ignore_exit_codes" : true
+	}
+  ,
+  {
+    "type": "powershell",
+    "start_retry_timeout":"20m",
+    "inline": [
+      "if( Test-Path $Env:SystemRoot\\windows\\system32\\Sysprep\\unattend.xml ){ rm $Env:SystemRoot\\windows\\system32\\Sysprep\\unattend.xml -Force}",
+      "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /quiet /quit",
+      "while($true) { $imageState = Get-ItemProperty HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\State | Select ImageState; if($imageState.ImageState -ne 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') { Write-Output $imageState.ImageState; Start-Sleep -s 10  } else { break } }"
+    ]
+  }
+]
+}
