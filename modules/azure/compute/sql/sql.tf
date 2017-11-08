@@ -143,7 +143,7 @@ count = "${var.vm_count}"
   {
       "fileUris": [
         "https://bitbucket.org/talentsoft/infrastructure-code/raw/master/extensions/azure/sql/format-disks.ps1",
-        "https://bitbucket.org/talentsoft/infrastructure-code/raw/master/extensions/global/format-disks.ps1"
+        "https://bitbucket.org/talentsoft/infrastructure-code/raw/master/extensions/global/format-disk.ps1"
       ],
       "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File format-disks.ps1"
   }
