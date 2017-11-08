@@ -1,28 +1,39 @@
 variable "resource_group_name" {}
 variable "location" {}
 variable "storage_account_name" {}
-variable "storage_account_type" {default = "Standard_GRS"}
 variable "storage_account_kind" {default = "Storage"}
 variable "storage_account_tier" {default     = "Standard"}
 variable "storage_account_replication_type" {default     = "LRS"}
 variable "enabled_ip_forwarding" {default = false}
 variable "subnet_id" {}
+variable "dns_servers" {type = "list"}
 variable "vm_admin_username" {default = "testuser"}
 variable "vm_admin_password" {}
 variable "vm_size" { default = "Standard_DS1_v2" }
+variable "vm_sql_image_id" {}
+variable "vm_domain_name" {}
+variable "vm_count" {}
+
 
 #virtual machines variables
 variable "vm_name_prefix" {}
 variable "vm_computer_name" {}
+
+#Availability set
+resource "azurerm_availability_set" "sql-as" {
+  name                = "sql-as"
+  location            = "${var.location}"
+  resource_group_name = "${var.resource_group_name}"
+  managed = true
+}
 
 resource "azurerm_storage_account" "sto-sql-vm0" {
   name                     = "${var.storage_account_name}sqlvm0"  #It would be better to have a unique identifier
   location                 = "${var.location}"
   resource_group_name      = "${var.resource_group_name}"
   account_kind             = "${var.storage_account_kind}"
-  account_type             = "${var.storage_account_type}"
-  account_replication_type = "LRS"
-  account_tier = "Standard"
+  account_replication_type = "${var.storage_account_replication_type}"
+  account_tier             = "${var.storage_account_tier}"
 }
 
 resource "azurerm_network_interface" "nic" {
@@ -30,7 +41,7 @@ resource "azurerm_network_interface" "nic" {
   location            = "${var.location}"
   resource_group_name = "${var.resource_group_name}"
   enable_ip_forwarding = "${var.enabled_ip_forwarding}"
-  count = 1
+  count = "${var.vm_count}"
 
   ip_configuration {
     name                          = "ipconfigSQL${count.index}"
@@ -39,44 +50,39 @@ resource "azurerm_network_interface" "nic" {
     primary =  "true"
   }
 
-  dns_servers =  ["10.0.4.4", "10.0.4.5"]
+  dns_servers =  "${var.dns_servers}"
 }
 
 
-resource "azurerm_virtual_machine" "vm0" {
+resource "azurerm_virtual_machine" "vm" {
   name                  = "${var.vm_name_prefix}-vm0"
   location              = "${var.location}"
   resource_group_name   = "${var.resource_group_name}"
   vm_size               = "${var.vm_size}"
-  network_interface_ids = ["${element(azurerm_network_interface.nic.*.id, 0)}"]
-  # availability_set_id   = "${azurerm_availability_set.ad-as.id}"
+  network_interface_ids = ["${element(azurerm_network_interface.nic.*.id, count.index)}"]
+  count = "${var.vm_count}"
+  availability_set_id   = "${azurerm_availability_set.sql-as.id}"
 
   storage_image_reference {
-    publisher = "MicrosoftSQLServer"
-    offer     = "SQL2014SP2-WS2012R2"
-    sku       = "Enterprise"
-    version   = "latest"
+    id = "${var.vm_sql_image_id}"
   }
 
-
   storage_os_disk {
-    name          = "${var.vm_name_prefix}-vm0-os.vhd"
-    vhd_uri       = "https://${azurerm_storage_account.sto-sql-vm0.name}.blob.core.windows.net/${azurerm_storage_account.sto-sql-vm0.name}-vhds/${var.vm_name_prefix}-vm0-os.vhd"
+    name          = "${var.vm_name_prefix}-vm${count.index}-os.vhd"
+    os_type       = "windows"
     create_option = "FromImage"
     caching = "ReadWrite"
   }
 
   storage_data_disk {
-    name            = "${var.vm_name_prefix}-sqlvm0-dataDisk1.vhd"
-    vhd_uri         = "https://${azurerm_storage_account.sto-sql-vm0.name}.blob.core.windows.net/${azurerm_storage_account.sto-sql-vm0.name}-vhds/${var.vm_name_prefix}-sqlvm0-dataDisk1.vhd"
+    name            = "${var.vm_name_prefix}-vm${count.index}-dataDisk1.vhd"
     create_option   = "Empty"
     lun             = 0
     disk_size_gb    = "128"
   }
 
   storage_data_disk {
-    name            = "${var.vm_name_prefix}-sqlvm0-dataDisk2.vhd"
-    vhd_uri         = "https://${azurerm_storage_account.sto-sql-vm0.name}.blob.core.windows.net/${azurerm_storage_account.sto-sql-vm0.name}-vhds/${var.vm_name_prefix}-sqlvm0-dataDisk2.vhd"
+    name            = "${var.vm_name_prefix}-vm${count.index}-dataDisk2.vhd"
     create_option   = "Empty"
     lun             = 1
     disk_size_gb    = "128"
@@ -97,17 +103,18 @@ resource "azurerm_virtual_machine_extension" "join-ad-domain" {
 name = "join-ad-domain"
 location = "${var.location}"
 resource_group_name = "${var.resource_group_name}"
-virtual_machine_name = "${azurerm_virtual_machine.vm0.name}"
+virtual_machine_name = "${element(azurerm_virtual_machine.vm.*.name, count.index)}"
 publisher = "Microsoft.Compute"
 type = "JsonADDomainExtension"
 type_handler_version = "1.3"
-depends_on = ["azurerm_virtual_machine.vm0"]
+count = "${var.vm_count}"
+depends_on = ["azurerm_virtual_machine.vm"]
 
   settings = <<SETTINGS
   {
-    "Name": "contoso.com",
+    "Name": "${var.vm_domain_name}",
     "OUPath": "",
-    "User": "contoso.com\\testuser",
+    "User": "${var.vm_domain_name}\\${var.vm_admin_username}",
     "Restart": true,
     "Options": 3
   }
@@ -115,7 +122,30 @@ SETTINGS
 
   protected_settings = <<PROTECTED_SETTINGS
   {
-    "Password": "AweS0me@PW"
+    "Password": "${var.vm_admin_password}"
   }
 PROTECTED_SETTINGS
+}
+
+
+resource "azurerm_virtual_machine_extension" "format-disks" {
+name = "format-disks"
+location             = "${var.location}"
+resource_group_name  = "${var.resource_group_name}"
+virtual_machine_name = "${element(azurerm_virtual_machine.vm.*.name, count.index)}"
+publisher            = "Microsoft.Compute"
+type                 = "CustomScriptExtension"
+type_handler_version = "1.8"
+depends_on           = ["azurerm_virtual_machine.vm"]
+count = "${var.vm_count}"
+
+ settings = <<SETTINGS
+  {
+      "fileUris": [
+        "https://bitbucket.org/talentsoft/infrastructure-code/raw/master/extensions/azure/sql/format-disks.ps1",
+        "https://bitbucket.org/talentsoft/infrastructure-code/raw/master/extensions/global/format-disks.ps1"
+      ],
+      "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File format-disks.ps1"
+  }
+SETTINGS
 }

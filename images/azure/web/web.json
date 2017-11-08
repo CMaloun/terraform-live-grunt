@@ -30,41 +30,28 @@
     "winrm_timeout": "3m",
     "winrm_username": "packer",
 
+
     "location": "West US",
     "vm_size": "Standard_DS2_v2"
   }],
   "provisioners": [
     {
-      "type": "powershell",
-      "inline": [
-        "winrm quickconfig -q",
-        "winrm set winrm/config '@{MaxTimeoutms=\"7200000\"}'",
-        "winrm set winrm/config/winrs '@{MaxShellsPerUser=\"100\"}'",
-        "winrm set winrm/config/winrs '@{MaxConcurrentUsers=\"30\"}'",
-        "winrm set winrm/config/winrs '@{MaxProcessesPerShell=\"100\"}'",
-        "winrm set winrm/config/winrs '@{MaxMemoryPerShellMB=\"4096\"}'",
-        "winrm set winrm/config/service '@{AllowUnencrypted=\"true\"}'"
-      ]
-    },
+     "type": "powershell",
+     "script":"install_7zip.ps1"
+   },
    {
     "type": "powershell",
     "script":"install_puppetagent_windows.ps1"
   },
   {
       "type": "file",
-      "source": "C:/puppet/code/environments/development/hieradata/",
-      "destination": "C:/Windows/Temp/packer-puppet-masterless/hieradata"
+      "source": "C:/puppet/code/environments/development.7z",
+      "destination": "C:/Windows/Temp/packer-puppet-masterless/"
     },
-	{
-  	"type": "puppet-masterless",
-    "guest_os_type": "windows",
-  	"manifest_file": "C:\\puppet\\code\\environments\\development\\manifests\\site.pp",
-  	"hiera_config_path": "C:\\puppet\\code\\environments\\development\\hiera.yaml",
-  	"module_paths": ["C:\\puppet\\code\\environments\\development\\modules","C:\\puppet\\code\\environments\\development\\site"],
-    "facter" : { "role" : "windowswebserver" },
-    "ignore_exit_codes" : true
-	}
-  ,
+    {
+      "type":"windows-shell",
+      "script":"puppet_run.bat"
+    },
   {
     "type": "powershell",
     "start_retry_timeout":"20m",

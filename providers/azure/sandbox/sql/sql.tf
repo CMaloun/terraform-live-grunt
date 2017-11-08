@@ -10,6 +10,10 @@ variable "vm_name_prefix" {}
 variable "vm_admin_password" {}
 variable "vm_admin_username" {}
 variable "subnet_prefix" {}
+variable "vm_sql_image_id" {}
+variable "vm_domain_name" {}
+variable "dns_servers" { type = "list"}
+variable "vm_count" {}
 
 provider "azurerm" {
     client_id = "${var.client_id}" #"ff2151a0-198f-4716-a58b-f17a8d103292"
@@ -43,6 +47,10 @@ module "sql" {
   vm_admin_username = "${var.vm_admin_username}"
   storage_account_name = "${var.storage_account_name}"
   subnet_id = "${module.security_sql.subnet_id}"
+  vm_sql_image_id = "${var.vm_sql_image_id}"
+  dns_servers = "${var.dns_servers}"
+  vm_domain_name = "${var.vm_domain_name}"
+  vm_count = "${var.vm_count}"
   #subnet_id = "${data.terraform_remote_state.network.nsg_subnets[2]}"
 }
 

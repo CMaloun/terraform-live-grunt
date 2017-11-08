@@ -21,3 +21,7 @@ vm_admin_password = "AweS0me@PW"
 vm_admin_username = "testuser"
 storage_account_name = "sqlstoragewestus"
 subnet_prefix = "10.0.3.0/24"
+dns_servers = ["10.0.4.4", "10.0.4.5"]
+vm_domain_name = "contoso.com"
+vm_sql_image_id = "/subscriptions/c92d99d5-bf52-4de7-867f-a269bbc19b3d/resourceGroups/image-rg/providers/Microsoft.Compute/images/BaseImageAzureSQL"
+vm_count = 1
