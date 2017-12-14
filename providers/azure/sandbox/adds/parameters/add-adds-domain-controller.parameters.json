@@ -5,7 +5,7 @@
     "virtualMachinesExtensionSettings": {
       "value": [
         {
-          "vms": [ "sandbox-ad-vm2" ],
+          "vms": [ "ad-ad-secondary" ],
           "extensions": [
             {
               "name": "join-ad-domain",
