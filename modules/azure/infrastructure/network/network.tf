@@ -5,7 +5,12 @@ variable "client_id" {}
 variable "client_secret" {}
 variable "subscription_id" {}
 variable "tenant_id" {}
+variable "network_address_space" {}
+variable "network_dns_servers" { type = "list" }
+variable "network_subnet_prefix" { type = "list" }
+variable "network_subnet_names" { type = "list" }
 variable "tags" { type = "map"}
+
 
 provider "azurerm" {
     client_id = "${var.client_id}" #"ff2151a0-198f-4716-a58b-f17a8d103292"
@@ -25,30 +30,15 @@ terraform {
 }
 
 module "network" {
-  source = "../../../../modules/azure/network/vnet"
+  source = "../network/vnet"
   resource_group_name = "${azurerm_resource_group.sandbox.name}"
   location = "${var.location}"
   prefix = "${var.prefix}"
   tags = "${var.tags}"
-  address_space = "10.0.0.0/16"
-  dns_servers = [
-        "10.0.4.4",
-        "10.0.4.5",
-        "168.63.129.16"
-      ]
-  subnet_prefixes = [
-      "10.0.1.0/24",
-      "10.0.2.0/24",
-      "10.0.3.0/24",
-      "10.0.4.0/24",
-      "10.0.0.128/25"
-  ]
-  subnet_names = [
-      "web",
-      "biz",
-      "sql",
-      "ad",
-      "mgmt"]
+  address_space = "${var.network_address_space}"
+  dns_servers = "${var.network_dns_servers}"
+  subnet_prefixes = "${var.network_subnet_prefix}"
+  subnet_names = "${var.network_subnet_names}"
 }
 
 output "vnet_name" { value = "${module.network.vnet_name}" }

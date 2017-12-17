@@ -9,7 +9,7 @@ variable "subnet_id" {}
 variable "dns_servers" {type = "list"}
 variable "vm_admin_username" {default = "testuser"}
 variable "vm_admin_password" {}
-variable "vm_size" { default = "Standard_DS1_v2" }
+variable "vm_size" { default = "Standard_A2" }
 variable "vm_sql_image_id" {}
 variable "vm_domain_name" {}
 variable "vm_count" {}
@@ -79,6 +79,7 @@ resource "azurerm_virtual_machine" "vm" {
     create_option   = "Empty"
     lun             = 0
     disk_size_gb    = "128"
+    caching = "ReadWrite"
   }
 
   storage_data_disk {
@@ -86,6 +87,7 @@ resource "azurerm_virtual_machine" "vm" {
     create_option   = "Empty"
     lun             = 1
     disk_size_gb    = "128"
+    caching = "None"
   }
 
   os_profile {
@@ -125,27 +127,4 @@ SETTINGS
     "Password": "${var.vm_admin_password}"
   }
 PROTECTED_SETTINGS
-}
-
-
-resource "azurerm_virtual_machine_extension" "format-disks" {
-name = "format-disks"
-location             = "${var.location}"
-resource_group_name  = "${var.resource_group_name}"
-virtual_machine_name = "${element(azurerm_virtual_machine.vm.*.name, count.index)}"
-publisher            = "Microsoft.Compute"
-type                 = "CustomScriptExtension"
-type_handler_version = "1.8"
-depends_on           = ["azurerm_virtual_machine.vm"]
-count = "${var.vm_count}"
-
- settings = <<SETTINGS
-  {
-      "fileUris": [
-        "https://bitbucket.org/talentsoft/infrastructure-code/raw/master/extensions/azure/sql/format-disks.ps1",
-        "https://bitbucket.org/talentsoft/infrastructure-code/raw/master/extensions/global/format-disk.ps1"
-      ],
-      "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File format-disks.ps1"
-  }
-SETTINGS
 }

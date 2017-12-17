@@ -1,5 +1,10 @@
 
 terragrunt = {
+  
+  terraform {
+    source = "../../../../modules/azure/infrastructure/network"
+  }
+
   # Include all settings from the root terraform.tfvars file
   include = {
     path = "${find_in_parent_folders()}"
@@ -13,4 +18,23 @@ tenant_id = "461a774b-c94c-4ea0-b027-311a135d9234"
 resource_group_name = "sandbox-test"
 location = "West US"
 prefix = "ts"
-tags  = {}
+network_address_space = "10.0.0.0/16"
+network_dns_servers = [
+      "10.0.4.4",
+      "10.0.4.5",
+      "168.63.129.16"
+    ]
+network_subnet_prefix = [
+    "10.0.1.0/24",
+    "10.0.2.0/24",
+    "10.0.3.0/24",
+    "10.0.4.0/24",
+    "10.0.0.128/25"
+]
+network_subnet_names = [
+    "web",
+    "biz",
+    "sql",
+    "ad",
+    "mgmt"]
+tags  = { environment = "sanbox"}

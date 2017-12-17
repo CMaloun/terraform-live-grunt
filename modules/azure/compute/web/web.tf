@@ -12,7 +12,7 @@ variable "vm_computer_name" {}
 variable "vm_name_prefix" {}
 variable "vm_admin_password" {}
 variable "vm_admin_username" {}
-variable "vm_size" { default = "Standard_DS1_v2" }
+variable "vm_size" { default = "Standard_A2" }
 variable "vm_count" {}
 variable "puppet_environment" {}
 variable "domain_name" {}
