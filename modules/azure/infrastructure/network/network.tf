@@ -30,7 +30,7 @@ terraform {
 }
 
 module "network" {
-  source = "../network/vnet"
+  source = "git::git@github.com:CMaloun/terraform-live-grunt.git//modules/azure/network/vnet"
   resource_group_name = "${azurerm_resource_group.sandbox.name}"
   location = "${var.location}"
   prefix = "${var.prefix}"
