@@ -35,6 +35,35 @@ param(
   [string]$PuppetVersion = $null
 )
 
+#########################
+# Disable Firewall
+#########################
+
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+
+#########################
+#Format Disk
+#########################
+
+    $disks = Get-Disk | Where partitionstyle -eq 'raw' | sort number
+
+    $letters = "D","L"
+    $count = 0
+    $labels = "Data","Log"
+
+    foreach ($disk in $disks) {
+        $driveLetter = $letters[$count].ToString()
+        $disk | 
+        Initialize-Disk -PartitionStyle MBR -PassThru |
+        New-Partition -UseMaximumSize -DriveLetter $driveLetter |
+        Format-Volume -FileSystem NTFS -NewFileSystemLabel $labels[$count] -Confirm:$false -Force
+    $count++
+    }
+    
+#######################################
+# Install firewall 
+#######################################
+
 if ($PuppetVersion) {
   $MsiUrl = "https://downloads.puppetlabs.com/windows/puppet-$($PuppetVersion).msi"
   Write-Host "Puppet version $PuppetVersion specified, updated MsiUrl to `"$MsiUrl`""
@@ -80,7 +109,7 @@ if (!($PuppetInstalled)) {
   Write-Host "Host file updated"
 
   Write-Host "set environment variable"
-  [Environment]::SetEnvironmentVariable("FACTER_role", $PuppetAgentRole, "Machine")
+  [Environment]::SetEnvironmentVariable("FACTER_roles", $PuppetAgentRole, "Machine")
   Write-Host "Environment variable updated"
 
   Restart-Computer -force
