@@ -59,9 +59,10 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
         Format-Volume -FileSystem NTFS -NewFileSystemLabel $labels[$count] -Confirm:$false -Force
     $count++
     }
-    
+
+
 #######################################
-# Install firewall 
+# Install puppet agent 
 #######################################
 
 if ($PuppetVersion) {
