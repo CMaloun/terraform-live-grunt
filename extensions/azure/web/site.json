@@ -1,0 +1,36 @@
+{
+  "sites" : [
+    {
+      "iisAppName" : "PROD_CAR",
+      "directoryPath" : "D:/Sites/PROD",
+      "bindings" : [{
+                    "protocol" : "http",
+                    "port" : 80,
+                    "IPAddress" : "*",
+                    "url" :"prod.localtest.me"
+                   },
+                   {
+                    "protocol" : "https",
+                    "port" : 443,
+                    "IPAddress" : "*",
+                    "url" :"prod.localtest.me"
+                   }]
+    },
+    {
+      "iisAppName" : "TEST_CAR",
+      "directoryPath" : "D:/Sites/TEST",
+      "bindings" : [{
+                    "protocol" : "http",
+                    "port" : 80,
+                    "IPAddress" : "*",
+                    "url" :"test.localtest.me"
+                   },
+                   {
+                    "protocol" : "http",
+                    "port" : 443,
+                    "IPAddress" : "*",
+                    "url" :"test.localtest.me"
+                   }]
+    }
+  ]
+}
