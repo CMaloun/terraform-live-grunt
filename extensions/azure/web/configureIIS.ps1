@@ -2,7 +2,6 @@
  Param(
     [Parameter(Mandatory=$True)]
     [string]$JsonFile
- 
  )
 
 Import-Module WebAdministration
@@ -54,7 +53,7 @@ foreach ($site in $sites.sites) {
     CreateAppPool $appPoolName
     
      If(!(Test-Path "IIS:\Sites\$($site.iisAppName)")) {
-        New-Website -Name $site.iisAppName -PhysicalPath $site.directoryPath  -ApplicationPool $site.iisAppName
+        New-Website -Name $site.iisAppName -PhysicalPath $site.directoryPath -ApplicationPool $site.iisAppName
         }
         else {
         Write-Host "The IIS site $($site.iisAppName) already exists" -ForegroundColor Yellow
