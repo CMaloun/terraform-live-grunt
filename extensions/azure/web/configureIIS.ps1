@@ -1,8 +1,8 @@
 [CmdletBinding()]
  Param(
-   [Parameter(Mandatory=$True)]
-    [string]$JsonFile
-   
+    [Parameter(Mandatory=$True)]
+    [string]$JsonFile
+ 
  )
 
 Import-Module WebAdministration
@@ -17,15 +17,14 @@ Function CreateAppPool {
 }
 
 Function CreatePhysicalPath {
-     Param([string] $fpath)
-     
-     if(Test-path $fpath) {
-         Write-Host "The folder $fpath already exists" -ForegroundColor Yellow
-         return
-         }
-     else{
-         New-Item -ItemType directory -Path $fpath -Force
-        }
+    Param([string] $fpath)
+    if(Test-path $fpath) {
+        Write-Host "The folder $fpath already exists" -ForegroundColor Yellow
+    return
+    }
+    else{
+        New-Item -ItemType directory -Path $fpath -Force
+    }
  }
 
 
@@ -44,12 +43,11 @@ foreach ($site in $sites.sites) {
     CreateAppPool $appPoolName
     
      If(!(Test-Path "IIS:\Sites\$($site.iisAppName)")) {
-          New-Website -Name $site.iisAppName -PhysicalPath $site.directoryPath  -ApplicationPool $site.iisAppName
-          
-          }
-      else {
-          Write-Host "The IIS site $($site.iisAppName) already exists" -ForegroundColor Yellow
-      }
+        New-Website -Name $site.iisAppName -PhysicalPath $site.directoryPathÂ  -ApplicationPool $site.iisAppName
+        }
+        else {
+        Write-Host "The IIS site $($site.iisAppName) already exists" -ForegroundColor Yellow
+    }
 
 
      foreach ($bindings in $site.bindings) {
