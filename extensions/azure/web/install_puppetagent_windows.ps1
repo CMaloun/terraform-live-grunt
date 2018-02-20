@@ -31,6 +31,7 @@ param(
   [string]$PuppetMasterHostName,
   [Parameter(Mandatory=$true)]
   [string]$PuppetAgentRole,
+  [Parameter(Mandatory=$true)]
   [string]$SiteJsonFile,
   [string]$MsiUrl = "https://downloads.puppetlabs.com/windows/puppet-agent-x64-latest.msi",
   [string]$PuppetVersion = $null
@@ -65,7 +66,8 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 # Provisioning IIS 
 #######################################
 
-./configureIIS.ps1 $SiteJsonFile
+$ScriptToRun= $PSScriptRoot+"\configureIIS.ps1"
+&$ScriptToRun $PSScriptRoot"\"$($SiteJsonFile)
 
 #######################################
 # Install puppet agent 
