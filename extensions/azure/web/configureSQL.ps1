@@ -30,8 +30,6 @@ param(
   [string]$PuppetMasterHostName,
   [Parameter(Mandatory=$true)]
   [string]$PuppetAgentRole,
-  [Parameter(Mandatory=$true)]
-  [string]$SiteJsonFile,
   [string]$MsiUrl = "https://downloads.puppetlabs.com/windows/puppet-agent-x64-latest.msi",
   [string]$PuppetVersion = $null
 )
@@ -48,9 +46,9 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 
     $disks = Get-Disk | Where partitionstyle -eq 'raw' | sort number
 
-    $letters = "D","L"
+    $letters = "F","G"
     $count = 0
-    $labels = "Data","Log"
+    $labels = "Data","Logs"
 
     foreach ($disk in $disks) {
         $driveLetter = $letters[$count].ToString()
@@ -61,12 +59,7 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
     $count++
     }
 
-#######################################
-# Provisioning IIS 
-#######################################
 
-$ScriptToRun= $PSScriptRoot+"\configureIIS.ps1"
-&$ScriptToRun $PSScriptRoot"\"$($SiteJsonFile)
 
 #######################################
 # Install puppet agent 
