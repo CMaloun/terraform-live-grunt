@@ -54,6 +54,7 @@ foreach ($site in $sites.sites) {
     
      If(!(Test-Path "IIS:\Sites\$($site.iisAppName)")) {
         New-Website -Name $site.iisAppName -PhysicalPath $site.directoryPath -ApplicationPool $site.iisAppName
+        Set-ItemProperty IIS:\Sites\$($site.iisAppName) -Name id -Value $site.siteID
         }
         else {
         Write-Host "The IIS site $($site.iisAppName) already exists" -ForegroundColor Yellow
