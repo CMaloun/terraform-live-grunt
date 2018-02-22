@@ -47,7 +47,7 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 # Install NodePad plus plus
 #########################
 
-choco install -y notepadplusplus
+#choco install -y notepadplusplus
 
 #########################
 #Format Disk
