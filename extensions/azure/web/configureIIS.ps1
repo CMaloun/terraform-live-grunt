@@ -31,13 +31,19 @@ Function CreatePhysicalPath {
 #####################
 Set-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST'  -filter "system.applicationHost/sites/siteDefaults/logFile" -name "logExtFileFlags" -value "Date,Time,ClientIP,UserName,SiteName,ComputerName,ServerIP,Method,UriStem,UriQuery,HttpStatus,Win32Status,BytesSent,BytesRecv,TimeTaken,ServerPort,UserAgent,Cookie,Referer,ProtocolVersion,Host,HttpSubStatus"
 Set-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST'  -filter "system.applicationHost/sites/siteDefaults/logFile" -name "logSiteId" -value "False"
-Add-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST'  -filter "system.applicationHost/sites/siteDefaults/logFile/customFields" -name "." -value @{logFieldName='ContosoField';sourceName='ContosoSource';sourceType='ServerVariable'}
+Add-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST'  -filter "system.applicationHost/sites/siteDefaults/logFile/customFields" -name "." -value @{logFieldName='X-FORWARDED-FOR';sourceName='X-FORWARDED-FOR';sourceType='Request Header'}
+Add-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST'  -filter "system.applicationHost/sites/siteDefaults/logFile/customFields" -name "." -value @{logFieldName='X-FORWARDED-HOST';sourceName='X-FORWARDED-HOST';sourceType='Request Header'}
 
 #####################
 # Change defaut website binding to port 81 
 #####################
 New-WebBinding -Name "Default Web Site" -IPAddress "*" -Port 81 -HostHeader ""
 Remove-WebBinding -Name "Default Web Site" -IPAddress "*" -Port 80 -HostHeader ""
+
+####################
+# URL Rewrite 2.1
+####################
+choco install -y urlrewrite
 
 #####################
 # Create sites 
