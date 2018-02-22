@@ -43,7 +43,7 @@ Remove-WebBinding -Name "Default Web Site" -IPAddress "*" -Port 80 -HostHeader "
 ####################
 # URL Rewrite 2.1
 ####################
-choco install -y urlrewrite
+#choco install -y urlrewrite
 
 #####################
 # Create sites 
