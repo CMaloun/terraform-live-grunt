@@ -3,6 +3,7 @@
     {
       "iisAppName" : "PROD_CAR",
       "directoryPath" : "D:/Sites/PROD",
+      "siteID" : 2,
       "bindings" : [{
                     "protocol" : "http",
                     "port" : 80,
@@ -19,6 +20,7 @@
     {
       "iisAppName" : "TEST_CAR",
       "directoryPath" : "D:/Sites/TEST",
+      "siteID" : 3,
       "bindings" : [{
                     "protocol" : "http",
                     "port" : 80,
