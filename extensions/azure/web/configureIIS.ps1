@@ -41,9 +41,15 @@ New-WebBinding -Name "Default Web Site" -IPAddress "*" -Port 81 -HostHeader ""
 Remove-WebBinding -Name "Default Web Site" -IPAddress "*" -Port 80 -HostHeader ""
 
 ####################
-# URL Rewrite 2.1
+# Install NlbModule
 ####################
-#choco install -y urlrewrite
+$source = $PSScriptRoot+"\TalentSoft.Web.NlbModule.nupkg"
+$destination = "D:\NlbModule"
+
+CreatePhysicalPath $destination
+
+Add-Type -assembly "system.io.compression.filesystem"
+[io.compression.zipfile]::ExtractToDirectory($source, $destination)
 
 #####################
 # Create sites 
