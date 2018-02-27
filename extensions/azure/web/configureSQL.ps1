@@ -61,6 +61,7 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 
 
 
+
 #######################################
 # Install puppet agent 
 #######################################
@@ -113,6 +114,14 @@ if (!($PuppetInstalled)) {
   [Environment]::SetEnvironmentVariable("FACTER_roles", $PuppetAgentRole, "Machine")
   Write-Host "Environment variable updated"
 
-  Restart-Computer -force
   Exit 0
 }
+
+#######################################
+# Install SQLServer
+#######################################
+Set-Location -Path 'C:\Installation SQL SERVER 2014 V1.1\Sources'
+$ScriptToRun= "C:\Installation SQL SERVER 2014 V1.1\Sources\Install_SGBD_Node.ps1"
+&$ScriptToRun
+
+Restart-Computer -force
