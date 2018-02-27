@@ -106,12 +106,12 @@ write-host "OK `r`n" -foreground green
 if ($DatacenterId -eq 2) {iCACLS $DataTempdbPath /Grant ("$LoginDomain" + ':(OI)(CI)F') /T}
 
 # Pending Reboot
-write-host "Pending Reboot `r`n"
-Import-module .\Get-PendingReboot.ps1  -force
-$RebootPending = Get-PendingReboot | Select-Object RebootPending  -ErrorAction Stop
-if ($RebootPending.RebootPending -match "True")
-	{Throw "Server must restart before the begining of the install"}
-write-host "OK `r`n" -foreground green 
+#write-host "Pending Reboot `r`n"
+#Import-module .\Get-PendingReboot.ps1  -force
+#$RebootPending = Get-PendingReboot | Select-Object RebootPending  -ErrorAction Stop
+#if ($RebootPending.RebootPending -match "True")
+#	{Throw "Server must restart before the begining of the install"}
+#write-host "OK `r`n" -foreground green 
 
 write-host "Install .Net 3.5 Framework `r`n"
 #Install-WindowsFeature -Name NET-Framework-Core -Source $WinSources  -ErrorAction Stop
