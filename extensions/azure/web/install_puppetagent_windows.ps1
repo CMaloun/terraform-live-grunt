@@ -124,7 +124,7 @@ if (!($PuppetInstalled)) {
   Write-Host "Host file updated"
 
   Write-Host "set environment variable"
-  [Environment]::SetEnvironmentVariable("FACTER_roles", $PuppetAgentRole, "Machine")
+  [Environment]::SetEnvironmentVariable("FACTER_role", $PuppetAgentRole, "Machine")
   Write-Host "Environment variable updated"
 
   Restart-Computer -force
