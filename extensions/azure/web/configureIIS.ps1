@@ -52,7 +52,7 @@ Add-Type -assembly "system.io.compression.filesystem"
 [io.compression.zipfile]::ExtractToDirectory($source, $destination)
 
 Set-Location -Path $destination
-$ScriptToRun = $destination+"\install.ps1"
+$ScriptToRun = $destination+"\tools\installer.ps1"
 &$ScriptToRun "Install"
 
 #####################
