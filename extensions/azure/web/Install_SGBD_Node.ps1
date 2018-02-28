@@ -103,7 +103,7 @@ Import-module .\function_TS_Create_Partition.ps1  -force
 TS_Create_Partition -DataDL $DataDL -DataAUS $DataAUS -DataLabel $DataLabel -LogDL $LogDL -LogAUS $LogAUS -LogLabel $LogLabel -DataTempdb $DataTempdb -DataTempdbLabe $DataTempdbLabel
 write-host "OK `r`n" -foreground green 
 
-if ($DatacenterId -eq 2) {iCACLS $DataTempdbPath /Grant ("$LoginDomain" + ':(OI)(CI)F') /T}
+#if ($DatacenterId -eq 2) {iCACLS $DataTempdbPath /Grant ("$LoginDomain" + ':(OI)(CI)F') /T}
 
 # Pending Reboot
 #write-host "Pending Reboot `r`n"
