@@ -34,8 +34,6 @@ param(
   [string]$PuppetVersion = $null
 )
 
-Restart-Computer -Force
-
 #########################
 # Disable Firewall
 #########################
