@@ -329,9 +329,9 @@ Catch {
 
 # REBOOT THE SERVER AFTER INSTALLATION
 Write-host "INSTALL DONE - REBOOT THE SERVER AFTER INSTALLATION - Press any key to Reboot `r`n" -foreground green
-Stop-Transcript
-$EndBatch = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-Restart-Computer -Force -Confirm:$false
+#Stop-Transcript
+#$EndBatch = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+Restart-Computer -Force 
 
 
 
