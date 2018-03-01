@@ -234,3 +234,6 @@ $SQLVersion = $SQLVersion.ProductVersion -replace '[.]',''
 if ($SQLVersion -ne 12055560) {write-host "SQL SERVER 2014 SP2 CU7 INSTALL FAILED `r`n" -foreground red}
 
 write-host "SQL SERVER 2014 SP2 CU7 INSTALL OK `r`n" -foreground green 
+
+}
+CATCH {throw}
