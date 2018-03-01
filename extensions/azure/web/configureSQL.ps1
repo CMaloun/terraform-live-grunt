@@ -64,6 +64,7 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 # Copy required file for SQL
 #######################################
 Copy-Item "Install_SGBD_Node.ps1" -Destination "C:\Installation SQL SERVER 2014 V1.1\Sources"
+Copy-Item "Install_SGBD_Node_1.ps1" -Destination "C:\Installation SQL SERVER 2014 V1.1\Sources"
 Copy-Item "Start_Install_SGBD.ps1" -Destination "C:\Installation SQL SERVER 2014 V1.1\Sources"
 
 #######################################
@@ -119,5 +120,9 @@ if (!($PuppetInstalled)) {
   
 }
 
+Set-Location -Path 'C:\Installation SQL SERVER 2014 V1.1\Sources'
+$ScriptToRun= "C:\Installation SQL SERVER 2014 V1.1\Sources\Install_SGBD_Node_1.ps1"
+&$ScriptToRun -DatacenterId 2 -DomainNameInput "contoso.com" -LoginNameInput "SQLSERVERUSER" -LoginPassword "AweS0me@PW" -SaPassword "If1mdpSQL!" -InstallFailoverCluster "N"
+ 
 Restart-Computer -Force
-Exit 0
+#Exit 0
