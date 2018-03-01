@@ -156,8 +156,8 @@ $reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine',$env:comp
 Write-Host $reg
 $regKey= $reg.OpenSubKey("SOFTWARE\\Microsoft\\Microsoft SQL Server\\MSSQL12.MSSQLSERVER\\MSSQLServer\\CurrentVersion\\" )
 Write-Host $regKey
-if ($regkey.count -eq 0) {write-host "SQL SERVER 2014 INSTALL FAILED `r`n" -foreground red 
-						break}
+if ($regkey.count -eq 0) {write-host "SQL SERVER 2014 INSTALL FAILED `r`n"}
+
 write-host "Install SQL SERVER 2014 OK `r`n" -foreground green 
 
 $env:PSModulePath += ";C:\Program Files (x86)\Microsoft SQL Server\120\Tools\PowerShell\Modules\"
@@ -194,8 +194,7 @@ $PdfFilterPath = $regkey.GetValue("Path")
 Write-Host $PdfFilterPath
 if ($PdfFilterPath -notlike "*C:\Program Files\Adobe\Adobe PDF iFilter 11 for 64-bit platforms\bin\*") {Add-Path  -ErrorAction Stop}
 Write-Host $PDFFilterCheck
-if ($PDFFilterCheck.contains("End of search: 0 match(es) found.") -eq $True) {write-host "Setting PDFFilter FAILED `r`n" -foreground red 
-								break}
+if ($PDFFilterCheck.contains("End of search: 0 match(es) found.") -eq $True) {write-host "Setting PDFFilter FAILED `r`n" -foreground red}
 
 write-host "Install Complements TalentSoft OK `r`n" -foreground green 
 
@@ -214,8 +213,7 @@ $reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine',$env:comp
 $regKey= $reg.OpenSubKey("SOFTWARE\\Microsoft\\Microsoft SQL Server\\MSSQL12.MSSQLSERVER\\MSSQLServer\\CurrentVersion\\" )
 $SQLVersion = $regkey.GetValue("CurrentVersion")
 $SQLVersion = $SQLVersion -replace '[.]',''
-if ($SQLVersion -ne 12050000) {write-host "SQL SERVER 2014 SP2 INSTALL FAILED `r`n" -foreground red 
-						break}
+if ($SQLVersion -ne 12050000) {write-host "SQL SERVER 2014 SP2 INSTALL FAILED `r`n" -foreground red}
 
 write-host "SQL SERVER 2014 SP2 INSTALL OK `r`n" -foreground green 
 
@@ -233,8 +231,7 @@ if ($SQLVersion -eq 12050000)
 $query = "SELECT  SERVERPROPERTY('ProductVersion') AS ProductVersion"
 $SQLVersion = Invoke-SQLCmd -Query $Query -Server $env:computername -Database master  -ErrorAction Stop
 $SQLVersion = $SQLVersion.ProductVersion -replace '[.]',''
-if ($SQLVersion -ne 12055560) {write-host "SQL SERVER 2014 SP2 CU7 INSTALL FAILED `r`n" -foreground red 
-break}
+if ($SQLVersion -ne 12055560) {write-host "SQL SERVER 2014 SP2 CU7 INSTALL FAILED `r`n" -foreground red}
 
 write-host "SQL SERVER 2014 SP2 CU7 INSTALL OK `r`n" -foreground green 
 
