@@ -150,8 +150,12 @@ InstallSQL $SQLServiceAccountPwd $SAPWD $ConfigIni	-ErrorAction Stop
 
 
 #Install check
+Write-Host "Install Check"
+
 $reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine',$env:computername)
+Write-Host $reg
 $regKey= $reg.OpenSubKey("SOFTWARE\\Microsoft\\Microsoft SQL Server\\MSSQL12.MSSQLSERVER\\MSSQLServer\\CurrentVersion\\" )
+Write-Host $regKey
 if ($regkey.count -eq 0) {write-host "SQL SERVER 2014 INSTALL FAILED `r`n" -foreground red 
 						break}
 write-host "Install SQL SERVER 2014 OK `r`n" -foreground green 
@@ -183,9 +187,13 @@ Function Global:Add-Path {
 				   } #End of Process
 			} 
 $reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine',$env:computername)
+Write-Host $reg
 $regKey= $reg.OpenSubKey("System\\CurrentControlSet\\Control\\Session Manager\\Environment\\" )
+Write-Host $regKey
 $PdfFilterPath = $regkey.GetValue("Path")
-if ($PdfFilterPath -notlike "*C:\Program Files\Adobe\Adobe PDF iFilter 11 for 64-bit platforms\bin\*") {Add-Path  -ErrorAction Stop}	
+Write-Host $PdfFilterPath
+if ($PdfFilterPath -notlike "*C:\Program Files\Adobe\Adobe PDF iFilter 11 for 64-bit platforms\bin\*") {Add-Path  -ErrorAction Stop}
+Write-Host $PDFFilterCheck
 if ($PDFFilterCheck.contains("End of search: 0 match(es) found.") -eq $True) {write-host "Setting PDFFilter FAILED `r`n" -foreground red 
 								break}
 
