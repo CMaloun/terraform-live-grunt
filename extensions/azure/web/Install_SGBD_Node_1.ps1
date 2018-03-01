@@ -126,7 +126,7 @@ if ($InstallFailoverCluster -Contains "Y")
 	$CheckInstall = Get-WindowsFeature  Failover-Clustering |  Select-Object -inputobject {$_.installstate}
 	if ($CheckInstall -ne "Installed") 	
 		{Install-windowsfeature -Name RSAT-Clustering -IncludeAllSubFeature -Source $WinSources  -ErrorAction Stop
-		Install-WindowsFeature -Name Failover-Clustering –IncludeManagementTools -Source $WinSources  -ErrorAction Stop} 
+		Install-WindowsFeature -Name Failover-Clustering -IncludeManagementTools -Source $WinSources  -ErrorAction Stop} 
 	write-host "OK `r`n" -foreground green }
 
 write-host "Set Policy	Security Setting `r`n"
@@ -183,7 +183,7 @@ Function Global:Add-Path {
 			$Reg = "Registry::HKLM\System\CurrentControlSet\Control\Session Manager\Environment"
 			$OldPath = (Get-ItemProperty -Path "$Reg" -Name PATH).Path
 			$NewPath = $OldPath + ’;’ + $NewPath
-			Set-ItemProperty -Path "$Reg" -Name PATH –Value $NewPath
+			Set-ItemProperty -Path "$Reg" -Name PATH -Value $NewPath
 				   } #End of Process
 			} 
 $reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine',$env:computername)
