@@ -125,7 +125,7 @@ $username = 'contoso\testuser'
 $password = 'AweS0me@PW'
 $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential $username, $securePassword
-Start-Process powershell -NoNewWindow -Credential $credential $ScriptToRun
+Start-Process powershell -NoNewWindow -Credential $credential $ScriptToRun -Wait
 
 #Restart-Computer -Force
 #Exit 0
