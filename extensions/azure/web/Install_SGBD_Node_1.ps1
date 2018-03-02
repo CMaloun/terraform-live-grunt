@@ -182,7 +182,7 @@ Function Global:Add-Path {
 			Process {
 			$Reg = "Registry::HKLM\System\CurrentControlSet\Control\Session Manager\Environment"
 			$OldPath = (Get-ItemProperty -Path "$Reg" -Name PATH).Path
-			$NewPath = $OldPath + ’;’ + $NewPath
+			$NewPath = $OldPath + ';' + $NewPath
 			Set-ItemProperty -Path "$Reg" -Name PATH -Value $NewPath
 				   } #End of Process
 			} 
