@@ -67,6 +67,7 @@ Copy-Item "Install_SGBD_Node.ps1" -Destination "C:\Installation SQL SERVER 2014 
 Copy-Item "Install_SGBD_Node_1.ps1" -Destination "C:\Installation SQL SERVER 2014 V1.1\Sources"
 Copy-Item "Install_SGBD_Node_2.ps1" -Destination "C:\Installation SQL SERVER 2014 V1.1\Sources"
 Copy-Item "Start_Install_SGBD.ps1" -Destination "C:\Installation SQL SERVER 2014 V1.1\Sources"
+Copy-Item "ChangeUser.ps1" -Destination "C:\Installation SQL SERVER 2014 V1.1\Sources"
 
 #######################################
 # Install puppet agent 
