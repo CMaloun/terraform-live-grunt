@@ -65,6 +65,7 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 #######################################
 Copy-Item "Install_SGBD_Node.ps1" -Destination "C:\Installation SQL SERVER 2014 V1.1\Sources"
 Copy-Item "Install_SGBD_Node_1.ps1" -Destination "C:\Installation SQL SERVER 2014 V1.1\Sources"
+Copy-Item "Install_SGBD_Node_2.ps1" -Destination "C:\Installation SQL SERVER 2014 V1.1\Sources"
 Copy-Item "Start_Install_SGBD.ps1" -Destination "C:\Installation SQL SERVER 2014 V1.1\Sources"
 
 #######################################
@@ -95,8 +96,8 @@ if (!($PuppetInstalled)) {
   }
 
   # Install it - msiexec will download from the url
-  #$install_args = @("/qn", "/norestart","/i", $MsiUrl, "PUPPET_AGENT_CERTNAME=$PuppetAgentCertName PUPPET_AGENT_ENVIRONMENT=$PuppetEnvironment PUPPET_AGENT_ACCOUNT_DOMAIN=contoso.com PUPPET_AGENT_ACCOUNT_USER=testuser PUPPET_AGENT_ACCOUNT_PASSWORD=AweS0me@PW")
-  $install_args = @("/qn", "/norestart","/i", $MsiUrl, "PUPPET_AGENT_CERTNAME=$PuppetAgentCertName PUPPET_AGENT_ENVIRONMENT=$PuppetEnvironment")
+  $install_args = @("/qn", "/norestart","/i", $MsiUrl, "PUPPET_AGENT_CERTNAME=$PuppetAgentCertName PUPPET_AGENT_ENVIRONMENT=$PuppetEnvironment PUPPET_AGENT_ACCOUNT_DOMAIN=contoso.com PUPPET_AGENT_ACCOUNT_USER=testuser PUPPET_AGENT_ACCOUNT_PASSWORD=AweS0me@PW")
+  #$install_args = @("/qn", "/norestart","/i", $MsiUrl, "PUPPET_AGENT_CERTNAME=$PuppetAgentCertName PUPPET_AGENT_ENVIRONMENT=$PuppetEnvironment")
   Write-Host "Installing Puppet. Running msiexec.exe $install_args"
   $process = Start-Process -FilePath msiexec.exe -ArgumentList $install_args -Wait -PassThru
   if ($process.ExitCode -ne 0) {
