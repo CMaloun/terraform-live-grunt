@@ -10,3 +10,5 @@ catch {
 $ScriptToRunAfter = "C:\Installation SQL SERVER 2014 V1.1\Sources\ChangeUser.ps1"
 $computerName = get-childitem -path env:computername
 &$ScriptToRunAfter -UserName .\LocalSystem -Password 'nothing' -Service 'puppet' -ServerN $computerName.Value -SecondsToWait 10
+Start-Sleep 20 
+Restart-Computer -Force
