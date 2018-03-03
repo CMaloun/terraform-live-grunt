@@ -1,8 +1,4 @@
 
-#Agustín Mántaras December 2014.
-#This code was downloaded from MSDN Code Gallery
-#You can visit my blog post http://blogs.msdn.com/b/amantaras/archive/2014/12/10/powershell-script-to-change-windows-service-credentials.aspx
-
 [CmdletBinding()]
 Param(
   [Parameter(Mandatory=$True,Position=1)] [string]$UserName,
@@ -138,6 +134,5 @@ write-host "PROCESS COMPLETED"  -foregroundcolor "RED" -backgroundcolor "yellow"
 
 }
 
-clear  #clearing  the screen
 
 main   #Calling the main function that will do the job.
