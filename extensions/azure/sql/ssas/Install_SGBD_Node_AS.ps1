@@ -43,7 +43,7 @@ $DatacenterPartitionConf = Import-Csv Datacenter_Partition_Conf.csv | select-obj
 $DatacenterPartitionConf | select-object DatacenterId,Datacenter
 #[int]$Read = Read-host  "Enter Datacenter ID"
 if ($DatacenterId -notin $first..$last ) {Throw "No Datacenter Choosen - Install abort"}
-$DatacenterPartitionConfTarget = $DatacenterPartitionConf | where-object {$_.DatacenterId -eq $Read}
+$DatacenterPartitionConfTarget = $DatacenterPartitionConf | where-object {$_.DatacenterId -eq $DatacenterId}
 
 $DatacenterId=$DatacenterPartitionConfTarget.DatacenterId
 $DataDL=$DatacenterPartitionConfTarget.DataDL
