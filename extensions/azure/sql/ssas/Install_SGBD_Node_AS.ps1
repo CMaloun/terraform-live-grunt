@@ -295,7 +295,7 @@ Set-Location $Chemin
  write-host "DBAtools install `r`n"
  Set-Location $Chemin
  Set-Location .\DbatoolsInstall
- ./dbatoolsInstall.ps1 -ErrorAction Stop
+ #./dbatoolsInstall.ps1 -ErrorAction Stop
  write-host "DBAtools install OK `r`n" -foreground green 
 
 # Write-Host "Master Stored Procedure Installation `r`n" 
@@ -307,7 +307,7 @@ Set-Location $Chemin
 												
 # write-host "Master Stored Procedure install OK `r`n" -foreground green 
 
- Set-Location $Chemin
+#Set-Location $Chemin
 
  }
  CATCH {throw}
@@ -332,10 +332,10 @@ Catch {
 
 # REBOOT THE SERVER AFTER INSTALLATION
 Write-host "INSTALL DONE - REBOOT THE SERVER AFTER INSTALLATION - Press any key to Reboot `r`n" -foreground green
-Stop-Transcript
-$EndBatch = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-Restart-Computer -Force -Confirm:$false
-
+#Stop-Transcript
+#$EndBatch = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+#Restart-Computer -Force -Confirm:$false
+#Restart-Computer -Force
 
 
 
